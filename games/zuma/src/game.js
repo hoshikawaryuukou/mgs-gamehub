@@ -122,9 +122,16 @@ class Ball {
         this.targetDistance = null; // For smooth insertion animation
         this.isInserting = false;
         this.markedForRemoval = false;
+        this.scale = 1; // For pop-in animation
     }
 
     updatePosition(path) {
+        // Animate scale
+        if (this.scale < 1) {
+            this.scale += 0.1;
+            if (this.scale > 1) this.scale = 1;
+        }
+
         const pos = path.getPointAtDistance(this.distance);
         if (pos) {
             this.x = pos.x;
@@ -209,8 +216,12 @@ class Game {
 
     spawnInitialBalls(count) {
         let startDist = 100; // Start a bit into the path
+        // Spawn from Head (furthest) to Tail (closest)
+        // So that addBallToChain (which adds to tail) builds the chain correctly
+        // Head should have highest distance
         for (let i = 0; i < count; i++) {
-            const ball = new Ball(this.getRandomColor(), startDist + i * BALL_DIAMETER);
+            const dist = startDist + (count - 1 - i) * BALL_DIAMETER;
+            const ball = new Ball(this.getRandomColor(), dist);
             this.addBallToChain(ball);
         }
     }
@@ -298,7 +309,12 @@ class Game {
 
             // If ballAhead is behind where it should be (overlapped by current), push it.
             if (ballAhead.distance < minDist) {
-                ballAhead.distance = minDist;
+                // Smooth push animation
+                const pushDist = minDist - ballAhead.distance;
+                // Use a speed limit to create the "expansion" effect
+                // If pushDist is large (insertion), it moves fast but not instant
+                const moveAmt = Math.min(pushDist, INSERT_ADJUST_SPEED);
+                ballAhead.distance += moveAmt;
             }
 
             current = current.prev;
@@ -418,7 +434,9 @@ class Game {
         if (insertAfter) {
             // Insert between hitBall and hitBall.next
             // hitBall -> newBall -> hitBall.next
-            newBall.distance = hitBall.distance - BALL_DIAMETER;
+
+            // Start overlapping to trigger push animation
+            newBall.distance = hitBall.distance;
 
             newBall.prev = hitBall;
             newBall.next = hitBall.next;
@@ -433,7 +451,9 @@ class Game {
         } else {
             // Insert between hitBall.prev and hitBall
             // hitBall.prev -> newBall -> hitBall
-            newBall.distance = hitBall.distance + BALL_DIAMETER;
+
+            // Start overlapping to trigger push animation
+            newBall.distance = hitBall.distance;
 
             newBall.next = hitBall;
             newBall.prev = hitBall.prev;
@@ -446,6 +466,7 @@ class Game {
             hitBall.prev = newBall;
         }
 
+        newBall.scale = 0.1; // Start small
         this.balls.push(newBall);
 
         // Check Matches
