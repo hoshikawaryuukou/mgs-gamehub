@@ -207,12 +207,28 @@ class Game {
         // Initial balls
         this.spawnInitialBalls(20);
 
+        // Set shooter colors based on existing balls
+        this.nextBulletColor = this.getNextShooterColor();
+        this.currentBulletColor = this.getNextShooterColor();
+
         this.lastTime = 0;
         requestAnimationFrame((t) => this.loop(t));
     }
 
     getRandomColor() {
         return COLORS[Math.floor(Math.random() * COLORS.length)];
+    }
+
+    getNextShooterColor() {
+        if (this.balls.length === 0) {
+            return this.getRandomColor();
+        }
+        const presentColors = new Set();
+        for (const ball of this.balls) {
+            presentColors.add(ball.color);
+        }
+        const colors = Array.from(presentColors);
+        return colors[Math.floor(Math.random() * colors.length)];
     }
 
     spawnInitialBalls(count) {
@@ -247,6 +263,22 @@ class Game {
         this.balls.push(ball);
     }
 
+    validateShooterColors() {
+        if (this.balls.length === 0) return;
+
+        const presentColors = new Set();
+        for (const ball of this.balls) {
+            presentColors.add(ball.color);
+        }
+        
+        if (!presentColors.has(this.currentBulletColor)) {
+            this.currentBulletColor = this.getNextShooterColor();
+        }
+        if (!presentColors.has(this.nextBulletColor)) {
+            this.nextBulletColor = this.getNextShooterColor();
+        }
+    }
+
     restart() {
         this.balls = [];
         this.head = null;
@@ -257,6 +289,8 @@ class Game {
         this.isDraining = false;
         document.getElementById('game-over').classList.add('hidden');
         this.spawnInitialBalls(20);
+        this.nextBulletColor = this.getNextShooterColor();
+        this.currentBulletColor = this.getNextShooterColor();
         this.updateScore(0);
     }
 
@@ -275,7 +309,7 @@ class Game {
         this.bullets.push(bullet);
 
         this.currentBulletColor = this.nextBulletColor;
-        this.nextBulletColor = this.getRandomColor();
+        this.nextBulletColor = this.getNextShooterColor();
     }
 
     loop(timestamp) {
@@ -382,7 +416,12 @@ class Game {
         }
 
         // Remove balls marked for removal
+        const hadRemovals = this.balls.some(b => b.markedForRemoval);
         this.balls = this.balls.filter(b => !b.markedForRemoval);
+        
+        if (hadRemovals) {
+            this.validateShooterColors();
+        }
 
         // Check Victory
         if (this.balls.length === 0 && !this.gameOver) {
