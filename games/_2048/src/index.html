@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>2048 遊戲</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-wrapper">
+      <div class="container">
+        <header>
+          <h1>2048</h1>
+          <div class="score-container">
+            <div class="score-box">
+              <span class="score-label">分數</span>
+              <span class="score" id="score">0</span>
+            </div>
+            <div class="score-box">
+              <span class="score-label">最高分</span>
+              <span class="score" id="best-score">0</span>
+            </div>
+          </div>
+        </header>
+
+        <div class="game-info">
+          <p>
+            使用 <strong>方向鍵</strong> 或 <strong>滑動</strong> 來移動方塊
+          </p>
+          <button class="new-game-btn" id="new-game-btn">新遊戲</button>
+        </div>
+
+        <div class="game-container">
+          <div class="grid-background">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+          <div class="tile-container" id="tile-container"></div>
+          <div class="game-message" id="game-message">
+            <p></p>
+            <button class="retry-btn">再試一次</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
