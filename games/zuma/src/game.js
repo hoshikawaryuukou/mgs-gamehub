@@ -181,6 +181,7 @@ class Game {
 
         this.score = 0;
         this.gameOver = false;
+        this.isDraining = false;
         this.isPaused = false;
 
         // Input
@@ -191,7 +192,7 @@ class Game {
             this.mousePos.y = e.clientY - rect.top;
         });
         this.canvas.addEventListener('mousedown', (e) => {
-            if (!this.gameOver) this.shoot();
+            if (!this.gameOver && !this.isDraining) this.shoot();
         });
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
@@ -253,6 +254,7 @@ class Game {
         this.bullets = [];
         this.score = 0;
         this.gameOver = false;
+        this.isDraining = false;
         document.getElementById('game-over').classList.add('hidden');
         this.spawnInitialBalls(20);
         this.updateScore(0);
@@ -280,7 +282,8 @@ class Game {
         const dt = (timestamp - this.lastTime) / 1000;
         this.lastTime = timestamp;
 
-        if (!this.gameOver && !this.isPaused) {
+        // Run update if game is not over OR if we are in draining animation
+        if ((!this.gameOver || this.isDraining) && !this.isPaused) {
             this.update();
         }
         this.draw();
@@ -288,6 +291,27 @@ class Game {
     }
 
     update() {
+        if (this.isDraining) {
+            // Draining logic: Move all balls fast to the end
+            const drainSpeed = BALL_SPEED * 8;
+            this.balls.forEach(b => b.distance += drainSpeed);
+
+            // Remove balls that reached the end
+            this.balls = this.balls.filter(b => b.distance < this.path.totalLength);
+
+            // Update positions for drawing
+            this.balls.forEach(b => b.updatePosition(this.path));
+
+            if (this.balls.length === 0) {
+                this.gameOver = true;
+                const el = document.getElementById('game-over');
+                el.querySelector('h1').innerText = "GAME OVER";
+                el.querySelector('h1').style.color = "#ff4444";
+                el.classList.remove('hidden');
+            }
+            return;
+        }
+
         // 1. Update Shooter Angle
         this.shooterAngle = Math.atan2(
             this.mousePos.y - this.shooterPos.y,
@@ -322,11 +346,7 @@ class Game {
 
         // Check Game Over (Check Head)
         if (this.head && this.head.distance >= this.path.totalLength) {
-            this.gameOver = true;
-            const el = document.getElementById('game-over');
-            el.querySelector('h1').innerText = "GAME OVER";
-            el.querySelector('h1').style.color = "#ff4444";
-            el.classList.remove('hidden');
+            this.isDraining = true;
         }
 
         // Update positions
