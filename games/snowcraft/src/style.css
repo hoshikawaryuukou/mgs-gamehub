@@ -1,0 +1,213 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+
+#game-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#gameCanvas {
+  border: 4px solid #4fc3f7;
+  border-radius: 8px;
+  box-shadow: 0 0 30px rgba(79, 195, 247, 0.3);
+  background: #87ceeb;
+}
+
+#ui-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* HUD 狀態顯示 */
+#hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  pointer-events: auto;
+}
+
+#hud > div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#level-info {
+  color: #ffd700;
+}
+
+#enemy-count {
+  color: #ff6b6b;
+}
+
+#lives-info {
+  color: #ff4757;
+}
+
+#hit-count {
+  color: #ffa502;
+}
+
+/* 覆蓋層通用樣式 */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  text-align: center;
+  pointer-events: auto;
+  z-index: 100;
+}
+
+.overlay h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.overlay h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #4fc3f7;
+}
+
+.overlay p {
+  font-size: 18px;
+  margin-bottom: 30px;
+  color: #ccc;
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+.overlay button {
+  padding: 15px 50px;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 20px rgba(79, 195, 247, 0.4);
+}
+
+.overlay button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(79, 195, 247, 0.6);
+}
+
+.overlay button:active {
+  transform: translateY(0);
+}
+
+/* 勝利畫面 */
+#victory-screen h1 {
+  color: #4caf50;
+}
+
+#victory-screen button {
+  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+  box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+}
+
+#victory-screen button:hover {
+  box-shadow: 0 8px 30px rgba(76, 175, 80, 0.6);
+}
+
+/* 失敗畫面 */
+#defeat-screen h1 {
+  color: #f44336;
+}
+
+#defeat-screen button {
+  background: linear-gradient(135deg, #f44336 0%, #e57373 100%);
+  box-shadow: 0 5px 20px rgba(244, 67, 54, 0.4);
+}
+
+#defeat-screen button:hover {
+  box-shadow: 0 8px 30px rgba(244, 67, 54, 0.6);
+}
+
+/* 完成畫面 */
+#complete-screen h1 {
+  color: #ffd700;
+}
+
+#complete-screen button {
+  background: linear-gradient(135deg, #ffd700 0%, #ffeb3b 100%);
+  color: #333;
+  box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+}
+
+#complete-screen button:hover {
+  box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6);
+}
+
+/* 隱藏類 */
+.hidden {
+  display: none !important;
+}
+
+/* 響應式設計 */
+@media (max-width: 850px) {
+  #hud {
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 14px;
+  }
+
+  .overlay h1 {
+    font-size: 36px;
+  }
+
+  .overlay h2 {
+    font-size: 22px;
+  }
+
+  .overlay p {
+    font-size: 16px;
+    padding: 0 20px;
+  }
+
+  .overlay button {
+    padding: 12px 40px;
+    font-size: 18px;
+  }
+}

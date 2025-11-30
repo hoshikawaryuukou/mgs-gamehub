@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snowcraft - 雪球大戰</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="game-container">
+      <canvas id="gameCanvas"></canvas>
+      <div id="ui-layer">
+        <!-- 遊戲狀態 HUD -->
+        <div id="hud">
+          <div id="level-info">關卡: <span id="current-level">1</span></div>
+          <div id="enemy-count">剩餘敵人: <span id="enemies-left">5</span></div>
+          <div id="lives-info">生命: <span id="lives">❤️❤️❤️</span></div>
+          <div id="hit-count">被擊中: <span id="hits">0</span>/3</div>
+        </div>
+
+        <!-- 開始畫面 -->
+        <div id="start-screen" class="overlay">
+          <h1>❄️ Snowcraft ❄️</h1>
+          <h2>雪球大戰</h2>
+          <p>拖拉移動角色，按住蓄力投擲雪球！</p>
+          <button id="start-btn">開始遊戲</button>
+        </div>
+
+        <!-- 勝利畫面 -->
+        <div id="victory-screen" class="overlay hidden">
+          <h1>🎉 勝利！🎉</h1>
+          <p id="victory-message">你消滅了所有敵人！</p>
+          <button id="next-level-btn">下一關</button>
+        </div>
+
+        <!-- 失敗畫面 -->
+        <div id="defeat-screen" class="overlay hidden">
+          <h1>💀 失敗 💀</h1>
+          <p>你的生命已耗盡...</p>
+          <button id="retry-btn">重新開始</button>
+        </div>
+
+        <!-- 遊戲完成畫面 -->
+        <div id="complete-screen" class="overlay hidden">
+          <h1>🏆 遊戲完成！🏆</h1>
+          <p>恭喜你通過所有關卡！</p>
+          <button id="restart-btn">再玩一次</button>
+        </div>
+      </div>
+    </div>
+    <script src="game.js"></script>
+  </body>
+</html>
